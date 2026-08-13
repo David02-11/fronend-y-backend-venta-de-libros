@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { createHandlers } from '../CONTROLADORES/crudController.js';
+export const { listar, obtener, crear, actualizar, eliminar } = createHandlers('usuario');
+const router = Router();
+router.get('/', listar);
+router.get('/:id', obtener);
+router.post('/', crear);
+router.put('/:id', actualizar);
+router.delete('/:id', eliminar);
+export default router;
