@@ -1,5 +1,28 @@
 # fronend-y-backend-venta-de-libros
 
+
+Perfecto 👍. Entonces ya tienes el proyecto en GitHub Codespaces.
+
+Para arrancarlo cada vez, usa:
+
+Terminal 1 — Backend
+
+cd /workspaces/fronend-y-backend-venta-de-libros/backend
+npm install
+node index.js
+
+Terminal 2 — Frontend
+
+cd /workspaces/fronend-y-backend-venta-de-libros/frontend
+npm install
+npm start
+
+Después, en PORTS, abre el puerto 3000.
+
+Si quieres, el siguiente paso puede ser dejar un único comando ./start.sh para que tú y tu compañero arranquen todo automáticamente.
+
+
+
 #  Venta de Libros Digital
 
 Sistema web para la **gestión de una librería y sus procesos de venta**, desarrollado como proyecto de formación en **Análisis y Desarrollo de Software**.
