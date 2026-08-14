@@ -1,0 +1,381 @@
+# INFORME TÉCNICO DE ACTIVIDADES REALIZADAS
+
+## Proyecto: Venta de Libros Digital
+
+**Autor:** Jonathan David Benavides Rodríguez
+**Programa:** Análisis y Desarrollo de Software
+**Fecha:** Agosto de 2026
+
+---
+
+# 1. Introducción
+
+El presente informe describe las actividades técnicas realizadas para la implementación, organización, configuración y puesta en funcionamiento del proyecto **Venta de Libros Digital** utilizando **GitHub, GitHub Codespaces, Node.js, React y MySQL**.
+
+El objetivo principal fue dejar el proyecto completamente funcional en un entorno de desarrollo en la nube, organizado por módulos y listo para ser compartido con otros integrantes del equipo.
+
+---
+
+# 2. Objetivo del trabajo realizado
+
+Dejar el sistema **Venta de Libros Digital** correctamente configurado y operativo en GitHub Codespaces, garantizando:
+
+* Organización adecuada del repositorio.
+* Separación entre frontend, backend y base de datos.
+* Conexión correcta entre backend y MySQL.
+* Ejecución funcional del frontend React.
+* Publicación del proyecto en GitHub.
+* Documentación del proceso de instalación y ejecución.
+
+---
+
+# 3. Publicación del proyecto en GitHub
+
+Se creó y configuró el repositorio:
+
+```
+https://github.com/David02-11/fronend-y-backend-venta-de-libros
+```
+
+Se realizaron las siguientes acciones:
+
+1. Inicialización del repositorio Git.
+2. Configuración del repositorio remoto.
+3. Adición de archivos del proyecto.
+4. Creación de commits.
+5. Envío de cambios a la rama `main`.
+
+Comandos utilizados:
+
+```bash
+git init
+git remote add origin https://github.com/David02-11/fronend-y-backend-venta-de-libros.git
+git add .
+git commit -m "Subir proyecto completo Venta de Libros"
+git push -u origin main
+```
+
+---
+
+# 4. Organización del repositorio
+
+Se reorganizó el proyecto para separar claramente los componentes del sistema.
+
+## Estructura final
+
+```
+fronend-y-backend-venta-de-libros/
+│
+├── frontend/
+├── backend/
+├── database/
+│   └── base_de_datos
+├── README.md
+└── .gitignore
+```
+
+### Descripción
+
+* **frontend/** → Aplicación React.
+* **backend/** → API Node.js + Express.
+* **database/** → Archivo SQL de la base de datos.
+* **README.md** → Documentación del proyecto.
+* **.gitignore** → Exclusión de archivos sensibles y dependencias.
+
+---
+
+# 5. Configuración de Git y protección de archivos sensibles
+
+Se creó un archivo `.gitignore` para evitar subir información sensible al repositorio.
+
+Elementos protegidos:
+
+```
+.env
+node_modules/
+build/
+dist/
+.vscode/
+.idea/
+```
+
+Se verificó mediante:
+
+```bash
+git status --ignored
+```
+
+confirmando que los archivos `.env` y `node_modules` quedaron ignorados correctamente.
+
+---
+
+# 6. Configuración del frontend
+
+Se revisó y corrigió el archivo `frontend/package.json`.
+
+## Cambio realizado
+
+```json
+"proxy": "http://localhost:5000"
+```
+
+Esto permitió que React redirigiera automáticamente las peticiones API hacia el backend.
+
+## Configuración adicional para Codespaces
+
+Archivo `frontend/.env`:
+
+```env
+HOST=0.0.0.0
+WDS_SOCKET_PORT=443
+DANGEROUSLY_DISABLE_HOST_CHECK=true
+```
+
+Con esta configuración se solucionaron los errores de WebSocket del entorno GitHub Codespaces.
+
+---
+
+# 7. Configuración del backend
+
+Se verificó el archivo `backend/db.js`, confirmando que utiliza variables de entorno:
+
+```javascript
+host: process.env.DB_HOST,
+user: process.env.DB_USER,
+password: process.env.DB_PASSWORD,
+database: process.env.DB_NAME
+```
+
+## Archivo `backend/.env` configurado
+
+```env
+DB_HOST=127.0.0.1
+DB_USER=appuser
+DB_PASSWORD=123456
+DB_NAME=libreria
+DB_PORT=3306
+PORT=5000
+```
+
+---
+
+# 8. Instalación de MySQL en GitHub Codespaces
+
+Como GitHub Codespaces no incluye MySQL por defecto, se instaló manualmente.
+
+Comandos utilizados:
+
+```bash
+sudo apt update
+sudo apt install -y mysql-server mysql-client
+sudo service mysql start
+```
+
+Se verificó el estado del servicio mediante:
+
+```bash
+sudo service mysql status
+```
+
+confirmando que el servidor quedó activo.
+
+---
+
+# 9. Creación del usuario de aplicación
+
+Se creó un usuario específico para el proyecto con permisos sobre la base de datos `libreria`.
+
+Comandos ejecutados:
+
+```sql
+CREATE USER IF NOT EXISTS 'appuser'@'localhost' IDENTIFIED BY '123456';
+GRANT ALL PRIVILEGES ON libreria.* TO 'appuser'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+Posteriormente se comprobó la conexión mediante TCP:
+
+```bash
+mysql -h 127.0.0.1 -u appuser -p123456 -e "SHOW DATABASES;"
+```
+
+obteniendo acceso correcto a la base `libreria`.
+
+---
+
+# 10. Importación de la base de datos
+
+Se creó la carpeta `database` y se almacenó el archivo SQL del proyecto.
+
+Comandos utilizados:
+
+```bash
+mkdir -p database
+sudo mysql libreria < database/base_de_datos
+```
+
+Luego se verificó la creación de las tablas mediante:
+
+```bash
+sudo mysql -e "USE libreria; SHOW TABLES;"
+```
+
+confirmando la existencia de tablas como:
+
+* autor
+* categoria
+* cliente
+* libro
+* venta
+* pago
+* usuario
+* rol
+* entre otras.
+
+---
+
+# 11. Ejecución del backend
+
+Se instalaron las dependencias y se inició el servidor Express.
+
+Comandos utilizados:
+
+```bash
+cd backend
+npm install
+node index.js
+```
+
+El backend quedó ejecutándose en el puerto **5000**.
+
+---
+
+# 12. Ejecución del frontend
+
+Se instalaron las dependencias de React y se inició la aplicación.
+
+Comandos utilizados:
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+El frontend quedó ejecutándose en el puerto **3000**.
+
+---
+
+# 13. Integración frontend-backend
+
+Se realizaron pruebas de comunicación utilizando el endpoint:
+
+```bash
+curl http://localhost:5000/api/cliente?limit=100
+```
+
+Inicialmente se presentó el error:
+
+```
+ER_ACCESS_DENIED_NO_PASSWORD_ERROR
+```
+
+El problema se solucionó creando el usuario `appuser` y actualizando las variables de entorno del backend.
+
+Posteriormente el endpoint respondió correctamente con datos JSON de clientes.
+
+---
+
+# 14. Corrección de errores encontrados
+
+## Error 1: `Missing script: dev`
+
+Se detectó que el backend no tenía configurado el script `dev`. Se optó por ejecutar directamente:
+
+```bash
+node index.js
+```
+
+## Error 2: WebSocket de React en Codespaces
+
+Se solucionó mediante el archivo `frontend/.env` y la configuración del puerto WebSocket.
+
+## Error 3: Acceso denegado a MySQL
+
+Se solucionó creando el usuario `appuser` y utilizando `127.0.0.1` en lugar de `localhost`.
+
+## Error 4: Archivo SQL no encontrado
+
+Se corrigió verificando el nombre real del archivo (`base_de_datos`) y ubicándolo en la carpeta `database`.
+
+---
+
+# 15. Verificación funcional del sistema
+
+Se comprobó el funcionamiento de los siguientes componentes:
+
+| Componente               | Estado                   |
+| ------------------------ | ------------------------ |
+| MySQL                    | ✅ Funcionando            |
+| Base de datos `libreria` | ✅ Importada              |
+| Usuario `appuser`        | ✅ Configurado            |
+| Backend Express          | ✅ Ejecutándose           |
+| Frontend React           | ✅ Ejecutándose           |
+| Endpoint `/api/cliente`  | ✅ Responde correctamente |
+| Integración React + API  | ✅ Funcionando            |
+
+---
+
+# 16. Resultado final obtenido
+
+Al finalizar las actividades, el sistema quedó completamente operativo en GitHub Codespaces con la siguiente arquitectura:
+
+```
+Usuario
+   ↓
+Frontend React (3000)
+   ↓ HTTP/JSON
+Backend Express (5000)
+   ↓ SQL
+MySQL 8 (libreria)
+```
+
+Los módulos del sistema cargan información desde la base de datos y la comunicación entre frontend y backend se realiza correctamente.
+
+---
+
+# 17. Conclusiones
+
+* Se logró publicar y organizar correctamente el proyecto en GitHub.
+* Se separaron adecuadamente frontend, backend y base de datos.
+* Se instaló y configuró MySQL dentro de GitHub Codespaces.
+* Se solucionaron problemas de autenticación y conexión a la base de datos.
+* Se verificó la comunicación entre React y Express mediante endpoints REST.
+* El proyecto quedó listo para desarrollo colaborativo y futuras mejoras.
+
+---
+
+# 18. Recomendaciones
+
+* Mantener los archivos `.env` fuera del repositorio.
+* Utilizar usuarios de base de datos específicos para aplicaciones.
+* Documentar cualquier cambio adicional en el `README.md`.
+* Crear scripts automáticos de arranque para facilitar el trabajo en equipo.
+* Implementar autenticación y control de roles en futuras versiones.
+
+---
+
+# 19. Evidencias técnicas realizadas
+
+Durante el proceso se ejecutaron y verificaron, entre otros, los siguientes comandos:
+
+```bash
+git push
+mysql -h 127.0.0.1 -u appuser -p123456 -e "SHOW DATABASES;"
+sudo mysql libreria < database/base_de_datos
+curl http://localhost:5000/api/cliente?limit=100
+npm start
+node index.js
+```
+
+Estas evidencias confirman la correcta configuración del entorno y la puesta en funcionamiento del sistema.
